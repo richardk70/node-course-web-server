@@ -12,13 +12,14 @@ hbs.registerPartials(__dirname + '/views/partials');
 // add express middleware
 app.set('view engine', 'hbs');
 
+// create a log entry with every request
 app.use( (req, res, next) => {
     var now = new Date().toString();
     var log = `${now}: ${req.method} ${req.url}`;
     console.log(log);
     fs.appendFileSync('server.log', log + '\n', (err) => {
         if (err)
-        console.log('Unable to append to server.log.');
+            console.log('Unable to append to server.log.');
     });
     next();
 });
@@ -59,6 +60,13 @@ app.get('/about', (request, response) => {
     });
 });
 
+// projects route
+app.get('/projects', (req, res) => {
+    res.render('projects.hbs', {
+        pageTitle: 'Projects',
+    });
+});
+
 // bad URL route
 app.get('/bad', (request, response) => {
     response.send({
@@ -68,5 +76,5 @@ app.get('/bad', (request, response) => {
 
 // get the app to start listening to a port
 app.listen(port, () => {
-    console.log(`Server running on port ${port}.`);
+    console.log(`Server running on port ${port}...`);
 });
